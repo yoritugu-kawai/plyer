@@ -46,9 +46,9 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 	//
-	
+	/*
 	void CheckAllCollisions();
-
+*/
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -66,9 +66,9 @@ private: // メンバ変数
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 
-	AABB playerAABB;
+	/*AABB playerAABB;
 	AABB boxAABB;
-	bool isHet = false;
+	bool isHet = false;*/
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

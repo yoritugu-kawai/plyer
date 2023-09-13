@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	player_->Update();
-	CheckAllCollisions();
+	//CheckAllCollisions();
 
 }
 
