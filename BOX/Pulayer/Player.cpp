@@ -4,7 +4,7 @@
 
 Player::~Player() {
 	/*for (BoxType* box : boxs_) {
-		delete box;
+	    delete box;
 	}*/
 }
 
@@ -15,18 +15,18 @@ void Player::Initialize(Model* model) {
 
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
-
 }
 
 void Player::Update() {
 
 	/*画像*/
 	worldTransform_.TransferMatrix();
-	
+
 	/*移動*/
 	Move();
 
 	/*弾*/
+	//BoxJoy();
 	Box();
 	tim--;
 	// 赤
@@ -122,7 +122,6 @@ void Player::Move() {
 
 #pragma region 回転
 
-
 	if (input_->TriggerKey(DIK_LEFT)) {
 		playerRotateLeftFlag = true;
 	}
@@ -179,20 +178,27 @@ void Player::Move() {
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 }
 
+void Player::BoxJoy() {
+
+}
+
 void Player::Box() {
+
+	#pragma region
 	if (tim <= 0) {
 		if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
 			return;
 		}
 		// 赤
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
+		if (input_->PushKey(DIK_B) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) {
 			redMove = true;
 			blueMove = false;
 			boxSpeedRed = 0.0f;
 			TIM = 180;
 			// 右
 			if (rLetGo == true) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
+				if (input_->PushKey(DIK_D) ||
+				    joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
 					lLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxRed_ = new BoxType;
@@ -212,7 +218,8 @@ void Player::Box() {
 			}
 			// 左
 			if (lLetGo == true) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
+				if (input_->PushKey(DIK_A) ||
+				    joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
 					rLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxRed_ = new BoxType;
@@ -241,7 +248,7 @@ void Player::Box() {
 				TIM--;
 
 				if (TIM <= 0) {
-				boxSpeedRed = 2.0f;
+					boxSpeedRed = 2.0f;
 				}
 			}
 		}
@@ -304,11 +311,144 @@ void Player::Box() {
 				bulletOffset.x = 0.0f;
 				TIM--;
 				if (TIM <= 0) {
-				boxSpeedBulue = 2.0f;
+					boxSpeedBulue = 2.0f;
 				}
 			}
 		}
 	}
+#pragma endregion
+
+//#pragma region
+//	if (tim <= 0) {
+//		/*if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+//	    return;
+//	}*/
+//	// 赤
+//	if (input_->TriggerKey(DIK_B)) {
+//		redMove = true;
+//		blueMove = false;
+//		boxSpeedRed = 0.0f;
+//		TIM = 180;
+//		// 右
+//		if (rLetGo == true) {
+//			if (input_->TriggerKey(DIK_D)) {
+//				lLetGo = false;
+//				if (bButtonReleased_) {
+//					BoxType* boxRed_ = new BoxType;
+//					bulletOffset.x += 2.0f;
+//					// 弾の位置を計算してオフセットを適用
+//					Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
+//
+//					boxRed_->Initialize(model_, bulletPosition, redBox_);
+//
+//					REDs_.push_back(boxRed_);
+//					bButtonReleased_ = false; // 十字キーが押されたことを記録
+//					tim = 20;
+//				}
+//			} else {
+//				bButtonReleased_ = true; // 十字キーがリリースされたことを記録
+//			}
+//		}
+//		// 左
+//		if (lLetGo == true) {
+//			if( input_->TriggerKey(DIK_A)) {
+//				rLetGo = false;
+//				if (bButtonReleased_) {
+//					BoxType* boxRed_ = new BoxType;
+//					bulletOffset.x -= 2.0f;
+//					// 弾の位置を計算してオフセットを適用
+//					Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
+//
+//					boxRed_->Initialize(model_, bulletPosition, redBox_);
+//
+//					REDs_.push_back(boxRed_);
+//					bButtonReleased_ = false; // 十字キーが押されたことを記録
+//					tim = 20;
+//				}
+//			} else {
+//				bButtonReleased_ = true; // 十字キーがリリースされたことを記録
+//			}
+//		}
+//
+//	}
+//	// 動き
+//	else {
+//		if (redMove == true) {
+//			lLetGo = true;
+//			rLetGo = true;
+//			bulletOffset.x = 0.0f;
+//			TIM--;
+//
+//			if (TIM <= 0) {
+//				boxSpeedRed = 2.0f;
+//			}
+//		}
+//	}
+//	// 青
+//	if (input_->TriggerKey(DIK_X)) {
+//		blueMove = true;
+//		redMove = false;
+//		boxSpeedBulue = 0.0f;
+//		TIM = 180;
+//		// 右
+//		if (rLetGo == true) {
+//			if (input_->TriggerKey(DIK_D)) {
+//				lLetGo = false;
+//				if (bButtonReleased_) {
+//					BoxType* boxBlue_ = new BoxType;
+//					bulletOffset.x += 2.0f;
+//					// 弾の位置を計算してオフセットを適用
+//					Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
+//
+//					boxBlue_->Initialize(model_, bulletPosition, blueBox_);
+//
+//					BLUEs_.push_back(boxBlue_);
+//					bButtonReleased_ = false; // 十字キーが押されたことを記録
+//					tim = 20;
+//				}
+//			} else {
+//				bButtonReleased_ = true; // 十字キーがリリースされたことを記録
+//				RL = true;
+//			}
+//		}
+//		// 左
+//		if (lLetGo == true) {
+//			if (input_->TriggerKey(DIK_A)) {
+//				rLetGo = false;
+//				if (bButtonReleased_) {
+//					BoxType* boxBlue_ = new BoxType;
+//					bulletOffset.x -= 2.0f;
+//					// 弾の位置を計算してオフセットを適用
+//					Vector3 bulletPosition = Add(worldTransform_.translation_, bulletOffset);
+//
+//					boxBlue_->Initialize(model_, bulletPosition, blueBox_);
+//
+//					BLUEs_.push_back(boxBlue_);
+//					bButtonReleased_ = false; // 十字キーボタンが押されたことを記録
+//					tim = 20;
+//				}
+//			} else {
+//				bButtonReleased_ = true; // 十字キーがリリースされたことを記録
+//				RL = false;
+//			}
+//		}
+//
+//	}
+//	// 動き
+//	else {
+//		if (blueMove == true) {
+//
+//			lLetGo = true;
+//			rLetGo = true;
+//			bulletOffset.x = 0.0f;
+//			TIM--;
+//			if (TIM <= 0) {
+//				boxSpeedBulue = 2.0f;
+//			}
+//		}
+//	}
+//}
+//#pragma endregion
 }
 
 void Player::AdjustPositionOnBox(float newPosY) {

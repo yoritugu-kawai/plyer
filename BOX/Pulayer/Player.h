@@ -15,8 +15,8 @@ public:
 
 	void Draw(ViewProjection& viewProjection_);
 
+	void BoxJoy();
 	void Box();
-
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 
