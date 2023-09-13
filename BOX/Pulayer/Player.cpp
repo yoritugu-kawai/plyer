@@ -253,14 +253,15 @@ void Player::Box() {
 			}
 		}
 		// 青
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+		if (input_->PushKey(DIK_X) || joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
 			blueMove = true;
 			redMove = false;
 			boxSpeedBulue = 0.0f;
 			TIM = 180;
 			// 右
 			if (rLetGo == true) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
+				if (input_->PushKey(DIK_D) ||
+				    joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
 					lLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxBlue_ = new BoxType;
@@ -281,7 +282,8 @@ void Player::Box() {
 			}
 			// 左
 			if (lLetGo == true) {
-				if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
+				if (input_->PushKey(DIK_A) ||
+				    joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
 					rLetGo = false;
 					if (bButtonReleased_) {
 						BoxType* boxBlue_ = new BoxType;
